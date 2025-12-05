@@ -26,6 +26,7 @@ from functools import partial
 from threading import Thread
 from PIL import Image, ImageDraw
 import pulp
+from pulp import PULP_CBC_CMD
 import ctypes
 import pickle
 from datetime import datetime
@@ -42,6 +43,18 @@ global_updates_running = True  # if false, we don't grab any screenshots/update 
 qm_cache = {}  # screen_w x screen_h mapped against rendered question mark for missing tiles
 LOCK = singleton.SingleInstance()
 
+
+# def _runtime_path() -> str:
+    # return  xdg.BaseDirectory.get_runtime_dir()
+
+def _runtime_path() -> str:
+    xdg_dir = os.environ.get("XDG_RUNTIME_DIR", f"/run/user/{os.getuid()}")
+    dir_path = xdg_dir + "/i3expo"
+    if not os.path.isdir(dir_path):
+        os.makedirs(dir_path)
+    return dir_path
+
+RUNTIME_PATH = _runtime_path()
 
 def shutdown_common():
     global global_updates_running
@@ -218,7 +231,7 @@ def read_config():
             'screenshot_lib_path'        : os.path.join(os.path.dirname(os.path.realpath(__file__)), 'prtscn.so'),
             'store_state_on_restart'     : True,
             'max_persisted_state_age_sec': 2,
-            'state_f'                    : '/tmp/.' + SELF_WIN_CLASS + '.state',
+            'state_f'                    : f'{RUNTIME_PATH}/{SELF_WIN_CLASS}.state',
             'log_lvl'                    : 'INFO'
         }
     })
@@ -523,7 +536,7 @@ def get_max_tile_dimensions(screen_w, screen_h, pad_w, pad_h, spacing_x, spacing
     problem += r * len(grid) * max_tile_w + (len(grid)-1) * spacing_y + 2*pad_h <= screen_h
     problem += max_row_len*max_tile_w + (max_row_len-1)*spacing_x + 2*pad_w <= screen_w
 
-    result = problem.solve()
+    result = problem.solve(PULP_CBC_CMD(msg=False))
     assert result == pulp.LpStatusOptimal
     max_tile_w = max_tile_w.value()
     max_tile_h = max_tile_w * r
