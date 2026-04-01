@@ -1,4 +1,4 @@
-## 0.0.6 (unreleased)
+0.0.6 (2026-04-01)
 
 - configure pulp solver to keep stdout quiet
 - change global vars to upper case
