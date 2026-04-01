@@ -1,7 +1,7 @@
 ## 0.0.6 (unreleased)
 
-
-- Nothing changed yet.
+- configure pulp solver to keep stdout quiet
+- change global vars to upper case
 
 
 ## 0.0.5 (2025-06-04)
