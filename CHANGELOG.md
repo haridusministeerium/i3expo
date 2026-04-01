@@ -2,6 +2,7 @@
 
 - configure pulp solver to keep stdout quiet
 - change global vars to upper case
+- add ci/cd workflow
 
 
 ## 0.0.5 (2025-06-04)
