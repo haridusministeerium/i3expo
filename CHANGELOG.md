@@ -1,3 +1,9 @@
+0.0.7 (unreleased)
+------------------
+
+- Nothing changed yet.
+
+
 0.0.6 (2026-04-01)
 
 - configure pulp solver to keep stdout quiet
